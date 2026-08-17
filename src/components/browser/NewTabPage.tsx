@@ -294,16 +294,18 @@ export function NewTabPage({ onNavigate, onOpenGames }: Props) {
                 </span>
 
                 {/* Delete button on hover */}
-                <button
-                  aria-label={`Delete ${b.title}`}
-                  onClick={(e) => {
-                    e.stopPropagation();
-                    removeBookmark(b.id);
-                  }}
-                  className="absolute -top-1 -right-1 hidden group-hover:flex h-4 w-4 items-center justify-center rounded-full bg-neutral-900 border border-neutral-700 text-neutral-400 hover:text-white shadow-sm transition-colors"
-                >
-                  <X className="h-2.5 w-2.5" />
-                </button>
+                {!isGames && (
+                  <button
+                    aria-label={`Delete ${b.title}`}
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      removeBookmark(b.id);
+                    }}
+                    className="absolute -top-1 -right-1 hidden group-hover:flex h-4 w-4 items-center justify-center rounded-full bg-neutral-900 border border-neutral-700 text-neutral-400 hover:text-white shadow-sm transition-colors cursor-pointer z-10"
+                  >
+                    <X className="h-2.5 w-2.5" />
+                  </button>
+                )}
               </div>
             );
           })}

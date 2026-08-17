@@ -16,6 +16,7 @@ import {
   Video,
   Brain,
   Server,
+  Code2,
 } from "lucide-react";
 import { useCallback, useRef, useState } from "react";
 import { AnimatePresence, motion } from "motion/react";
@@ -44,7 +45,7 @@ export function BrowserShell() {
   const navs = useRef<Record<string, Nav>>({});
   const ignoreMetaUrlRef = useRef(false);
   const { settings, update } = useSettings();
-  const { bookmarks, toggleUrlBookmark, isBookmarked } = useBookmarks();
+  const { bookmarks, toggleUrlBookmark, isBookmarked, removeBookmark } = useBookmarks();
 
   const active = tabs.find((t) => t.id === activeId) ?? tabs[0]!;
   useBrowserChrome();
@@ -645,20 +646,34 @@ export function BrowserShell() {
           }
 
           return (
-            <button
-              key={b.id}
-              onClick={() => {
-                if (b.url === "frosted://games") {
-                  openGames(activeId);
-                } else {
-                  navigate(b.url);
-                }
-              }}
-              className="flex items-center gap-1.5 rounded px-2.5 py-1 hover:bg-neutral-900 hover:text-white transition-colors"
-            >
-              {renderIcon}
-              <span className="truncate max-w-[120px]">{displayTitle}</span>
-            </button>
+            <div key={b.id} className="group relative flex items-center">
+              <button
+                onClick={() => {
+                  if (b.url === "frosted://games") {
+                    openGames(activeId);
+                  } else {
+                    navigate(b.url);
+                  }
+                }}
+                className="flex items-center gap-1.5 rounded pl-2.5 pr-6 py-1 hover:bg-neutral-900 hover:text-white transition-colors"
+              >
+                {renderIcon}
+                <span className="truncate max-w-[120px]">{displayTitle}</span>
+              </button>
+
+              {!isGames && (
+                <button
+                  aria-label={`Delete ${b.title}`}
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    removeBookmark(b.id);
+                  }}
+                  className="absolute right-1.5 top-1/2 -translate-y-1/2 hidden group-hover:flex h-3.5 w-3.5 items-center justify-center rounded-full bg-neutral-850 border border-neutral-700 text-neutral-400 hover:text-white hover:bg-neutral-800 shadow-sm transition-colors cursor-pointer z-10"
+                >
+                  <X className="h-2 w-2" />
+                </button>
+              )}
+            </div>
           );
         })}
       </div>
